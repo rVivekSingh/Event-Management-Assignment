@@ -3,6 +3,9 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8090',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Add a request interceptor for handling token authentication globally

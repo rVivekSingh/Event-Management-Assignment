@@ -61,7 +61,7 @@ const EventDetailPage = () => {
         <strong>Location:</strong> {event.location}
       </p>
       <p>
-        <strong>Created By:</strong> {event.creator.name} ({event.creator.email})
+        <strong>Created By:</strong> {event.creatorId}
       </p>
 
       {isCreator && (

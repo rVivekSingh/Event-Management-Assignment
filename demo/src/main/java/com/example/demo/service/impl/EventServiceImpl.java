@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event createEvent(Event event, User creator) {
-        event.setCreator(creator);
+        event.setCreatorId(creator.getId());
         return eventRepository.save(event);
     }
 

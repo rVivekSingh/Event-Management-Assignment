@@ -30,8 +30,4 @@ public class User {
 
     @NotBlank
     private String password;
-
-    // Optional: Define relationship with events
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Event> events = new HashSet<>();
 }

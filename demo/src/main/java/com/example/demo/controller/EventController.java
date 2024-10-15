@@ -4,6 +4,7 @@ import com.example.demo.model.Event;
 import com.example.demo.model.User;
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.EventRequest;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.EventService;
 import com.example.demo.service.UserService;
 import com.example.demo.security.UserPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
@@ -23,6 +25,8 @@ public class EventController {
 
     private final EventService eventService;
     private final UserService userService;
+
+    private final UserRepository userRepository;
 
     // 3. GET /events: Retrieve all events (publicly accessible).
     @GetMapping
@@ -64,8 +68,9 @@ public class EventController {
     public ResponseEntity<?> updateEvent(@PathVariable Long id,
                                          @Valid @RequestBody EventRequest eventRequest,
                                          @AuthenticationPrincipal UserPrincipal currentUser) {
+
         return eventService.getEventById(id).map(existingEvent -> {
-            if (!existingEvent.getCreator().getEmail().equals(currentUser.getEmail())) {
+            if (!existingEvent.getCreatorId().equals(currentUser.getId())) {
                 return new ResponseEntity<>(new ApiResponse(false, "Unauthorized"), HttpStatus.UNAUTHORIZED);
             }
 
@@ -85,7 +90,7 @@ public class EventController {
     public ResponseEntity<?> deleteEvent(@PathVariable Long id,
                                          @AuthenticationPrincipal UserPrincipal currentUser) {
         return eventService.getEventById(id).map(existingEvent -> {
-            if (!existingEvent.getCreator().getEmail().equals(currentUser.getEmail())) {
+            if (!existingEvent.getCreatorId().equals(currentUser.getId())) {
                 return new ResponseEntity<>(new ApiResponse(false, "Unauthorized"), HttpStatus.UNAUTHORIZED);
             }
 

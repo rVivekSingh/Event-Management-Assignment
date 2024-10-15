@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { json, Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import api from '../api/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const EventListPage = () => {
   const [events, setEvents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('Event 1');
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredEvents, setFilteredEvents] = useState([]);
 
-  
+  const [data, setData] = useState(null);
   useEffect(() => {
     fetchEvents();
   }, []);
@@ -21,8 +21,6 @@ const EventListPage = () => {
   const fetchEvents = async () => {
     try {
         const response = await api.get('/events');
-        console.log("Api response: " + JSON.stringify(response.data));
-        
         setEvents(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -31,8 +29,8 @@ const EventListPage = () => {
 
   const filterEvents = () => {
     const term = searchTerm.toLowerCase();
-    console.log("events", events.length);
 
+    
     const filtered = events.filter(
       (event) =>
         event.title.toLowerCase().includes(term) ||

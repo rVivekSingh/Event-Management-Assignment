@@ -15,24 +15,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Event {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Future
+    @Column(nullable = false)
     private LocalDateTime date;
 
-    @NotBlank
+    @Column(nullable = false)
     private String location;
 
-    // Relationship to User (creator)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id")
-    private User creator;
+    @Column(nullable = false, name = "creator_id")
+    private Long creatorId;
 }
