@@ -8,9 +8,12 @@ import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -54,5 +57,14 @@ public class UserController {
         } catch (BadCredentialsException ex) {
             return new ResponseEntity<>(new ApiResponse(false, "Invalid email or password"), HttpStatus.UNAUTHORIZED);
         }
+    }
+
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserPrincipal currentUser) {
+        User user = userService.findByEmail(currentUser.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ResponseEntity.ok(user);
     }
 }

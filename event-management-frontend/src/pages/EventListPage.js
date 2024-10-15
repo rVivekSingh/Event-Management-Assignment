@@ -6,7 +6,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const EventListPage = () => {
   const [events, setEvents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('Event 1');
   const [filteredEvents, setFilteredEvents] = useState([]);
 
   
@@ -21,6 +21,8 @@ const EventListPage = () => {
   const fetchEvents = async () => {
     try {
         const response = await api.get('/events');
+        console.log("Api response: " + JSON.stringify(response.data));
+        
         setEvents(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -29,6 +31,8 @@ const EventListPage = () => {
 
   const filterEvents = () => {
     const term = searchTerm.toLowerCase();
+    console.log("events", events.length);
+
     const filtered = events.filter(
       (event) =>
         event.title.toLowerCase().includes(term) ||
