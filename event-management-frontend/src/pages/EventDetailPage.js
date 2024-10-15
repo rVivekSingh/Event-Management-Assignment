@@ -9,6 +9,7 @@ const EventDetailPage = () => {
   const { auth } = useContext(AuthContext);
   const [event, setEvent] = useState(null);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchEvent();
@@ -23,7 +24,24 @@ const EventDetailPage = () => {
       setError('Event not found.');
     }
   };
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get(`/users/id?userid=${event.creatorId}`);
+      setUser(response.data);
+    } catch (err) {
+      console.error('Error fetching event:', err);
+      setError('Event not found.');
+    }
+  };
 
+  const getUserEmail = () => {
+    fetchUser();
+
+    if(user?.email){
+      return user.email;
+    }
+    return null;
+  }
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
@@ -61,7 +79,7 @@ const EventDetailPage = () => {
         <strong>Location:</strong> {event.location}
       </p>
       <p>
-        <strong>Created By:</strong> {event.creatorId}
+        <strong>Created By:</strong> {event.creatorId} {getUserEmail()}
       </p>
 
       {isCreator && (

@@ -67,4 +67,12 @@ public class UserController {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/id")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getUserById(@RequestParam Long userid) {
+        User user = userService.findById(userid)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return ResponseEntity.ok(user);
+    }
 }
